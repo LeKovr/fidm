@@ -8,27 +8,27 @@
 # Image build info
 # -------------------------------------------------------------------------------
 
-# Dockerfile dir for fidm build
-# build: Dockerfiles/xxx
+# Каталог с Dockerfile для fidm build
+build: Dockerfiles/xxx
 
 # docker hub login for docker pull
 # or image prefix for docker build
-#creator: lekovr
+creator: lekovr
 
 # project name (container name prefix)
-#project: fidm
+project: fidm
 
 # image name
-#name: xxx
+name: xxx
 
 # image tag (container name suffix)
-#mode: master
+mode: master
 
 # docker image release [latest] TODO: use it
-#release: latest
+release: latest
 
 # docker image name (project_name)
-#image: fidm_xxx
+image: fidm_xxx
 
 
 # -------------------------------------------------------------------------------
@@ -36,13 +36,13 @@
 # -------------------------------------------------------------------------------
 
 # fidm args for start/stop required images (autostarted)
-#requires:
-#- consul mode=v2.01      # consul.yml
-#- ../statsd mode=master  # statsd.yml
+requires:
+- consup/consul mode=v2.01      # consul.yml
+- statsd mode=master  # statsd.yml
 
 # fidm args for start/stop linked containers with autostart
 #links:
-#- common/postgres    # postgres.yml
+- common/postgres    # postgres.yml
 
 # Use this container as DNS if link them
 #hasdns: 1
@@ -51,50 +51,51 @@
 # Image run info
 # -------------------------------------------------------------------------------
 
-# ip to bind publish ports
+# ip to bind publish ports. Non-ip are values translated to bind_ip
 #bind_ip: 127.0.0.2
 #bind_device: wlan2
+bind_host: web.dev
 
 # publish ports
-#publish:
-#- 8500
+publish:
+- 8500
 
 # ip to bind random private ports
-#local_ip: 127.0.7.7
+local_ip: 127.0.7.7
 
 # private ports, map to local_ip:random_port
-#private:
-#- 3142
+private:
+- 3142
 
 # mount volume
 # /:/var/log/supervisor
-#log_dir: var/log
+log_dir: var/log
 
 # add MODE as hostname suffix
-#host_use_mode: 1
+host_use_mode: 1
 
 # -------------------------------------------------------------------------------
 # Direct docker run args
 # -------------------------------------------------------------------------------
 
-#volume:
+volume:
 # if left part does not begins with "/", add work dir
-#- app/pgws:/home/app
+- app/pgws:/home/app
 
 # Linked containers without autostart
-#link:
-#- consup_consul_main:consul
+link:
+- consup_consul_main:consul
 
-#env:
-#- LOCALE=ru_RU
-#- TZ=Europe/Moscow
+env:
+- LOCALE=ru_RU
+- TZ=Europe/Moscow
 
 # Daemon
 #detach: true
 
 # Interactive
-#interactive: true
-#tty: true
-#rm: true
+interactive: true
+tty: true
+rm: true
 
 # -------------------------------------------------------------------------------
