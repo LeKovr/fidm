@@ -309,8 +309,8 @@ app_run() {
   local config_file
   local current_dir=$run_at
   [[ "$run_at" == "." ]] && current_dir=$PWD
-  for prefix in "$current_dir/" "../" "../../" ; do # look at current, parent and grandparent dir
-    for f in "" ".yml" "fidm.yml" ; do              # add nothing, ext or default name
+  for prefix in "$current_dir/" "../" "../../" "../../../" ; do # look at current, parent and grandparent dir
+    for f in "" ".yml" "fidm.yml" ; do      # add nothing, ext or default name
       local n="$prefix$file"
       #[[ "$n" == "." ]] || n="$n."
       #    echo "Check $n$f"
