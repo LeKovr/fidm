@@ -108,6 +108,7 @@ app_config() {
 # ip to bind publish ports
 #bind_ip: 127.0.0.2
 #bind_device: wlan2
+#bind_host: web.dev
 
 # publish ports
 #publish:
@@ -265,6 +266,11 @@ config_parse() {
       # set ip from device name
       # http://stackoverflow.com/questions/6829605/putting-ip-address-into-bash-variable-is-there-a-better-way
       local bind_ip=$(ip -f inet -o addr show $val|cut -d\  -f 7 | cut -d/ -f 1)
+      cfg[bind_ip]=$bind_ip
+    elif [[ "$key" == "bind_host" ]] ; then
+      # set ip from host name
+      # http://unix.stackexchange.com/questions/20784/how-can-i-resolve-a-hostname-to-an-ip-address-in-a-bash-script
+      local bind_ip=$(getent hosts $val | cut -d' ' -f1)
       cfg[bind_ip]=$bind_ip
     elif [[ "$key" == "publish" ]] ; then
       # bind port to given ip
