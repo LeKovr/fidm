@@ -16,7 +16,7 @@ app_help() {
     fidm.sh - Fig inspired Docker manager
 
   Usage:
-    fidm.sh COMMAND CONFIG[.yml] [all] [var=value]
+    fidm.sh COMMAND CONFIG[.yml] [-a] [var=value]
 
   Where: 
 
@@ -29,7 +29,7 @@ app_help() {
 
     CONFIG    - config file with fidm vars and docker run args
 
-    all       - key to process dependencies also, used in "stop" and "rm" commands
+    -a        - key to process dependencies also, used in "stop" and "rm" commands
 
     var=value - fidm params which will replace config and default values
 
@@ -38,7 +38,7 @@ app_help() {
     fidm.sh build postgres
 
     fidm.sh start pgws mode=dev
-    fidm.sh stop modperl all
+    fidm.sh stop modperl -a
 
 EOF
   exit 1
@@ -214,7 +214,7 @@ image_stop() {
   fi
   # Stop dependencies
   alldeps=("${requires[@]}" "${links[@]}")
-  [[ "$cmd_ext" == "all" ]] && for (( i = 0 ; i < ${#alldeps[@]} ; i++ )) ; do app_run $work_dir $cmd ${alldeps[$i]} ; done
+  [[ "$cmd_ext" == "-a" ]] && for (( i = 0 ; i < ${#alldeps[@]} ; i++ )) ; do app_run $work_dir $cmd ${alldeps[$i]} ; done
 
 }
 
@@ -304,13 +304,17 @@ app_run() {
 
   local cmd_ext   # extra command arg like "stop XX all"
   if [[ "$file" == "${file/=/}" ]] ; then
-    shift      # name given
-    cmd_ext=$1 # get extra
-    [[ "$cmd_ext" == "all" ]] && shift # rm arg3 from $@ if know it
+    shift         # name given
+    if [[ "$file" == "-a" ]] ; then
+      cmd_ext=$file # get extra
+      file=""       # 2d arg is -a
+    else
+      cmd_ext=$1    # get extra
+      [[ "$cmd_ext" == "-a" ]] && shift # rm arg3 from $@ if know it
+    fi
   else
-    file=""    # 2d arg is var
+    file=""       # 2d arg is var
   fi
-
   # config filename
   local config_file
   local current_dir=$run_at
@@ -367,14 +371,14 @@ app_run() {
   if [[ "${cfg[log_dir]}" ]] ; then
     # add pwd if host path is relative
     local val=${cfg[log_dir]}
-    if [[ "$val" != "${val/\/*}" ]] ; then # line does not begin with '/'
-#    if [[ $val == "${val#/}" ]] ; then # line does not begin with '/'
+#    if [[ "$val" != "${val/\/*}" ]] ; then # line does not begin with '/'
+    if [[ $val == "${val#/}" ]] ; then # line does not begin with '/'
       val=$work_dir/$val
     fi
     cfg[args]="${cfg[args]} --volume=$val/${cfg[name]}_${cfg[mode]}:/var/log/supervisor"
   fi
 
-  local tag=${cfg[image]}_${cfg[mode]}
+  local tag=${cfg[project]}_${cfg[name]}_${cfg[mode]}
 
   if [[ "$DEBUG" ]] ; then
     cat <<EOF
@@ -448,7 +452,7 @@ EOF
       image_remove $tag
       # rm dependencies
       alldeps=("${requires[@]}" "${links[@]}")
-      [[ "$cmd_ext" == "all" ]] && for (( i = 0 ; i < ${#alldeps[@]} ; i++ )) ; do app_run $work_dir $cmd ${alldeps[$i]} ; done
+      [[ "$cmd_ext" == "-a" ]] && for (( i = 0 ; i < ${#alldeps[@]} ; i++ )) ; do app_run $work_dir $cmd ${alldeps[$i]} ; done
       ;;
     init)
       app_config $config_file ${cfg[name]} || exit 1
