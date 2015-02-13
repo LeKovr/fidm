@@ -316,20 +316,19 @@ app_run() {
       #    echo "Check $n$f"
       [ -f "$n$f" ] && { config_file="$n$f" ; break ; }
     done
-    [[ "$config_file" ]] && break       # file found
-    [[ "$run_at" == "." ]] && break     # search parents only for includes
+    [[ "$config_file" ]] && break           # file found
+    [[ "$run_at" == "." ]] && break         # search parents only for includes
   done
-  [[ "$config_file" ]] || {
+  if [[ "$config_file" ]] ; then
+    config_file=$(readlink -f $config_file) # normalize path
+  else
     config_file=$current_dir/${file}.yml
-    echo "===================== Config file $file does not exists. Using defaults ($config_file)"
-  }
-  local res=$(readlink -f $config_file)   # normalize path
-  local noext=${res%.yml}                 # remove .yml if any
-  local path=$noext
-
-  local work_dir=$(dirname $path)         # all paths are relative to config file
-  local project_def=$(basename $work_dir) # PROJECT/NAME[/fidm].yml
-  local name_def=$(basename $path)        # PROJECT/NAME[/fidm].yml
+    echo "== Config file $file does not exists. Using defaults ($config_file)"
+  fi
+  local noext=${config_file%.yml}           # remove .yml if any
+  local work_dir=$(dirname $noext)          # all paths are relative to config file
+  local project_def=$(basename $work_dir)   # PROJECT/NAME[/fidm].yml
+  local name_def=$(basename $noext)         # PROJECT/NAME[/fidm].yml
   if [[ "$name_def" == "fidm" ]] ; then
     name_def=$project_def
     project_def=$(basename $(dirname $work_dir))
