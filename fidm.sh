@@ -274,8 +274,12 @@ config_parse() {
       cfg[bind_ip]=$bind_ip
     elif [[ "$key" == "publish" ]] ; then
       # bind port to given ip
-      local port_number=${val%/udp} # remove proto, TODO: add /tcp support
-      args="$args --$key=${cfg[bind_ip]}:$port_number:$val"
+      if [[ "$val" != "${val/:}" ]] ; then # line contains ':' (both ports)
+        args="$args --$key=${cfg[bind_ip]}:$val"
+      else
+        local port_number=${val%/udp} # remove proto, TODO: add /tcp support
+        args="$args --$key=${cfg[bind_ip]}:$port_number:$val"
+      fi
     elif [[ "$key" == "private" ]] ; then
       # bind port to localhost
       args="$args --publish=${cfg[local_ip]}::$val"
@@ -375,7 +379,9 @@ app_run() {
     if [[ $val == "${val#/}" ]] ; then # line does not begin with '/'
       val=$work_dir/$val
     fi
-    cfg[args]="${cfg[args]} --volume=$val/${cfg[name]}_${cfg[mode]}:/var/log/supervisor"
+    local d=$val/${cfg[name]}_${cfg[mode]}
+    [ -d $d ] || mkdir -p $d
+    cfg[args]="${cfg[args]} --volume=$d:/var/log/supervisor"
   fi
 
   local tag=${cfg[project]}_${cfg[name]}_${cfg[mode]}
