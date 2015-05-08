@@ -198,8 +198,10 @@ image_start() {
 
   local host=${cfg[name]}
   [[ "${cfg[host_use_mode]}" ]] && host="${host}_${cfg[mode]}"
+  local varname="ENV_$host" # get args from env
+  eval var=\$$varname
   $DOCKER run --hostname=$host --name=$tag --env=MODE=${cfg[mode]} --env=PROJECT=${cfg[project]} \
-    ${cfg[args]} ${cfg[creator]}/${cfg[image]}:${cfg[release]} ${cfg[cmd]}
+    ${cfg[args]} $var ${cfg[creator]}/${cfg[image]}:${cfg[release]} ${cfg[cmd]}
 }
 
 # ------------------------------------------------------------------------------
@@ -351,6 +353,9 @@ app_run() {
   local -A cfg                      # associative array
   local -a requires links alldeps   # indexed arrays
   local i                           # array index for loops
+
+  [ -f ~/.fidmrc ] && . ~/.fidmrc
+  [ -f .fidmrc ] && . .fidmrc
 
   # echo "Parsing config $config_file ..."
   config_parse $config_file $work_dir
