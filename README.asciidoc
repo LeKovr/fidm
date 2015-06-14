@@ -16,7 +16,8 @@ FIDM is a bash script. You just need to download it into $PATH directory anf set
 
 -----
 FIDM_VER=v0.1 \
-  && curl -o /usr/local/bin/fidm -SL https://github.com/LeKovr/fidm/releases/download/${FIDM_VER}/fidm.sh \
+  && curl -o /usr/local/bin/fidm \
+          -SL https://raw.githubusercontent.com/LeKovr/fidm/${FIDM_VER}/fidm.sh \
   && chmod +x /usr/local/bin/fidm
 -----
 
