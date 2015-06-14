@@ -1,6 +1,6 @@
 == FIDM
+
 Docker container manager.
-:toc:
 
 == Install
 
@@ -15,7 +15,12 @@ Docker container manager.
 FIDM is a bash script. You just need to download it into $PATH directory anf set execute permission:
 
 -----
-FIDM_VER=0.1 && curl -o /usr/local/bin/fidm -SL https://github.com/LeKovr/fidm/releases/download/${FIDM_VER}/fidm.sh \
+FIDM_VER=v0.1 \
+  && curl -o /usr/local/bin/fidm -SL https://github.com/LeKovr/fidm/releases/download/${FIDM_VER}/fidm.sh \
   && chmod +x /usr/local/bin/fidm
 -----
 
+=== Usage
+
+1. Create fidm config file (see eg/fidm_rus.yml for example)
+2. Run `fidm start'
