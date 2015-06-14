@@ -198,7 +198,7 @@ image_start() {
 
   local host=${cfg[name]}
   [[ "${cfg[host_use_mode]}" ]] && host="${host}_${cfg[mode]}"
-  local varname="ENV_$host" # get args from env
+  local varname="ENV_${host/-/_}" # get args from env, replace '-' in var name
   eval var=\$$varname
   $DOCKER run --hostname=$host --name=$tag --env=MODE=${cfg[mode]} --env=PROJECT=${cfg[project]} \
     ${cfg[args]} $var ${cfg[creator]}/${cfg[image]}:${cfg[release]} ${cfg[cmd]}
@@ -361,8 +361,8 @@ app_run() {
   config_parse $config_file $work_dir
 
   # Get vars from args
-  for var in "$@" ; do
-    local var_split=(${var//=/ })
+  for v in "$@" ; do
+    local var_split=(${v//=/ })
     cfg[${var_split[0]}]=${var_split[1]}
   done
 
