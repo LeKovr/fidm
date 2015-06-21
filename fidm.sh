@@ -226,7 +226,7 @@ config_parse() {
   local config=$1 ; shift
   local root_dir=$1 ; shift
   [ -e $config ] || return
-  local args=""
+  local args=${cfg[args]}
   while read line ; do
     # Skip comments
     s=${line%%#*} # remove endline comments
@@ -363,8 +363,17 @@ app_run() {
   # Get vars from args
   for v in "$@" ; do
     local var_split=(${v//=/ })
-    cfg[${var_split[0]}]=${var_split[1]}
+    local rm_add=${var_split[0]%_add} # if name=XX_add then add value to var XX
+    local value=""
+    local key=$rm_add
+    [[ "$rm_add" != "${var_split[0]}" ]] && [[ "${cfg[$key]}" ]] && value="${cfg[$key]} "
+    if [[ "${var_split[2]}" ]] ; then
+      cfg[$key]="$value${var_split[1]}=${var_split[2]}"
+    else
+      cfg[$key]="$value${var_split[1]}"
+    fi
   done
+
 
   # Set defaults
   [[ "${cfg[creator]}" ]] || x=$($DOCKER_INFO info 2>/dev/null | grep Username) cfg[creator]=${x#*: }  
