@@ -287,7 +287,7 @@ config_parse() {
       args="$args --publish=${cfg[local_ip]}::$val"
     elif [[ "$key" == "volume" ]] ; then
       # add pwd if host path is relative
-      if [[ "$val" != "${val/\/*}" ]] ; then # line does not begin with '/'
+      if [[ "$val" == "${val#/}" ]] ; then # line does not begin with '/'
         val=$root_dir/$val
       fi
       args="$args --$key=$val"
@@ -380,7 +380,6 @@ app_run() {
   if [[ "${cfg[log_dir]}" ]] ; then
     # add pwd if host path is relative
     local val=${cfg[log_dir]}
-#    if [[ "$val" != "${val/\/*}" ]] ; then # line does not begin with '/'
     if [[ $val == "${val#/}" ]] ; then # line does not begin with '/'
       val=$work_dir/$val
     fi
