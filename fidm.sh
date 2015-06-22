@@ -368,7 +368,11 @@ app_run() {
     local key=$rm_add
     [[ "$rm_add" != "${var_split[0]}" ]] && [[ "${cfg[$key]}" ]] && value="${cfg[$key]} "
     if [[ "${var_split[2]}" ]] ; then
-      cfg[$key]="$value${var_split[1]}=${var_split[2]}"
+      if [[ "${var_split[3]}" ]] ; then
+        cfg[$key]="$value${var_split[1]}=${var_split[2]}=${var_split[3]}"
+      else
+        cfg[$key]="$value${var_split[1]}=${var_split[2]}"
+      fi
     else
       cfg[$key]="$value${var_split[1]}"
     fi
