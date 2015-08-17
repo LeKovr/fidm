@@ -171,7 +171,9 @@ image_started() {
 # ------------------------------------------------------------------------------
 # Создать образ и присвоить ему тег
 image_create() {
-  $DOCKER build -t ${cfg[creator]}/${cfg[image]}:${cfg[release]} -f ${cfg[build]}/${cfg[dockerfile]}  ${cfg[build]}
+  local arg=""
+  [[ ${cfg[dockerfile]} == "Dockerfile" ]] || arg="-f ${cfg[build]}/${cfg[dockerfile]}"
+  $DOCKER build -t ${cfg[creator]}/${cfg[image]}:${cfg[release]} $arg ${cfg[build]}
 }
 
 # ------------------------------------------------------------------------------
