@@ -202,6 +202,7 @@ image_start() {
   [[ "${cfg[host_use_mode]}" ]] && host="${host}_${cfg[mode]}"
   local varname="ENV_${host//[-.]/_}" # get args from env, replace '-' in var name
   eval var=\$$varname
+  [[ "$DEBUG" == "3" ]] && echo "VAR: $varname ($var)"
   $DOCKER run --hostname=$host --name=$tag --env=MODE=${cfg[mode]} --env=PROJECT=${cfg[project]} \
     ${cfg[args]} $var ${cfg[creator]}/${cfg[image]}:${cfg[release]} ${cfg[cmd]}
 }
