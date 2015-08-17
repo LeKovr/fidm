@@ -171,7 +171,7 @@ image_started() {
 # ------------------------------------------------------------------------------
 # Создать образ и присвоить ему тег
 image_create() {
-  $DOCKER build -t ${cfg[creator]}/${cfg[image]}:${cfg[release]} ${cfg[build]}
+  $DOCKER build -t ${cfg[creator]}/${cfg[image]}:${cfg[release]} -f ${cfg[build]}/${cfg[dockerfile]}  ${cfg[build]}
 }
 
 # ------------------------------------------------------------------------------
@@ -251,7 +251,7 @@ config_parse() {
     # Process var & value
 
     # cut fidm params
-    for t in build creator project release image mode name bind_ip local_ip hasdns log_dir host_use_mode cmd; do
+    for t in build dockerfile creator project release image mode name bind_ip local_ip hasdns log_dir host_use_mode cmd; do
       if [[ "$key" == "$t" ]] ; then
         cfg[$key]=$val
         val=""
@@ -384,6 +384,7 @@ app_run() {
   [[ "${cfg[project]}" ]] || cfg[project]=$project_def
   [[ "${cfg[name]}"    ]] || cfg[name]=$name_def
   [[ "${cfg[build]}"   ]] || cfg[build]="Dockerfiles/${cfg[name]}"
+  [[ "${cfg[dockerfile]}"   ]] || cfg[dockerfile]="Dockerfile"
   [[ "${cfg[release]}" ]] || cfg[release]="latest"
   [[ "${cfg[image]}"   ]] || cfg[image]=${cfg[project]}_${cfg[name]}
   [[ "${cfg[mode]}"    ]] || cfg[mode]=$(cd $work_dir && git rev-parse --abbrev-ref HEAD 2> /dev/null)
