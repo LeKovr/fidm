@@ -329,10 +329,12 @@ app_run() {
   [[ "$run_at" == "." ]] && current_dir=$PWD
   for prefix in "$current_dir/" "../" "../../" "../../../" ; do # look at current, parent and grandparent dir
     for f in "" ".yml" "fidm.yml" ; do      # add nothing, ext or default name
+      [[ "$file" ]] || { [[ "$f" != "fidm.yml" ]] && continue ; } # do not check $prefix/ and $prefix/.yml
       local n="$prefix$file"
       #[[ "$n" == "." ]] || n="$n."
       #    echo "Check $n$f"
       [ -f "$n$f" ] && { config_file="$n$f" ; break ; }
+      [[ "$file" == "${file%.yml}" ]] || break # only one check if name has ext
     done
     [[ "$config_file" ]] && break           # file found
     [[ "$run_at" == "." ]] && break         # search parents only for includes
@@ -340,7 +342,9 @@ app_run() {
   if [[ "$config_file" ]] ; then
     config_file=$(readlink -f $config_file) # normalize path
   else
-    config_file=$current_dir/${file}.yml
+    [[ "$file" ]] || file=fidm
+    [[ "$file" == "${file%.yml}" ]] && file=${file}.yml
+    config_file=$current_dir/${file}
     echo "== Config file $file does not exists. Using defaults ($config_file)"
   fi
   local noext=${config_file%.yml}           # remove .yml if any
