@@ -1,11 +1,9 @@
 #!/bin/bash
-
 #
 #    Copyright (c) 2014 Alexey Kovrizhkin <lekovr@gmail.com>
 #
 #    fidm.sh - Fig inspired Docker manager
 #
-
 # ------------------------------------------------------------------------------
 app_help() {
   local err=$1
