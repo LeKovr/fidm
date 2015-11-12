@@ -1,6 +1,7 @@
 == FIDM
 
 Docker container manager.
+This program uset for building containers at link:https://github.com/LeKovr/consup[ConSup] project.
 
 == Install
 
@@ -15,13 +16,13 @@ Docker container manager.
 FIDM is a bash script. You just need to download it into $PATH directory anf set execute permission:
 
 -----
-FIDM_VER=v0.1 \
-  && curl -o /usr/local/bin/fidm \
-          -SL https://raw.githubusercontent.com/LeKovr/fidm/${FIDM_VER}/fidm.sh \
-  && chmod +x /usr/local/bin/fidm
+wget -qO- https://raw.githubusercontent.com/LeKovr/fidm/master/install.sh | sh
 -----
 
 === Usage
 
-1. Create fidm config file (see eg/fidm_rus.yml for example)
-2. Run `fidm start'
+1. Create fidm config file (run `fidm init` or see eg/fidm_rus.yml for example)
+2. Edit it for your needs
+3. Run `fidm start'
+
+There are some examples in link:https://github.com/LeKovr/consup[ConSup] project
