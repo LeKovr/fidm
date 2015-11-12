@@ -3,6 +3,7 @@
 #    Copyright (c) 2014 Alexey Kovrizhkin <lekovr@gmail.com>
 #
 #    fidm.sh - Fig inspired Docker manager
+#    https://github.com/LeKovr/fidm
 #
 # ------------------------------------------------------------------------------
 app_help() {
@@ -16,7 +17,7 @@ app_help() {
   Usage:
     fidm.sh COMMAND CONFIG[.yml] [-a] [var=value]
 
-  Where: 
+  Where:
 
     COMMAND is one from
       build   - build docker image
@@ -179,16 +180,16 @@ image_create() {
 # called after image_stop
 image_remove() {
   local tag=$1
- 
+
   # container already stopped so we get not empty string if it exists
   local RUNNING=$($DOCKER inspect --format="{{ .State.Running }}" $tag 2> /dev/null)
- 
+
   if [[ "$RUNNING" ]]; then
     echo "Removing tag $tag..."
     $DOCKER rm $tag
   else
     echo "Tag $tag does not exists"
-  fi  
+  fi
 }
 
 # ------------------------------------------------------------------------------
@@ -436,7 +437,6 @@ EOF
         echo "  ${links[$i]}"
       done
     fi
-       
   fi
 
   LINK="$tag:${cfg[name]}" # save data for parent
@@ -506,4 +506,3 @@ app_run . "$@"
 # ------------------------------------------------------------------------------
 
 exit
-
