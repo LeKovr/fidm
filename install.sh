@@ -46,7 +46,7 @@ do_install() {
 
     $curl $url/$ver/$prg.sh > /tmp/$prg
     chmod +x /tmp/$prg
-    $sh_c "mv $prg /usr/local/bin/"
+    $sh_c "mv /tmp/$prg /usr/local/bin/"
 
 }
 
