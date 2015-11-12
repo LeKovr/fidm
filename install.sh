@@ -11,7 +11,7 @@ set -e
 
 prg=fidm
 url=https://raw.githubusercontent.com/LeKovr/$prg
-ver=v1.0
+ver=v1.1
 
 command_exists() {
     command -v "$@" > /dev/null 2>&1
