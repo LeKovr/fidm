@@ -9,9 +9,9 @@ set -e
 #   curl -sSL https://raw.githubusercontent.com/LeKovr/fidm/master/install.sh | sh
 
 
-url='https://raw.githubusercontent.com/LeKovr/fidm'
-ver=0.4
-prg=fidm.sh
+prg=fidm
+url=https://raw.githubusercontent.com/LeKovr/$prg
+ver=v0.4
 
 command_exists() {
     command -v "$@" > /dev/null 2>&1
@@ -31,7 +31,7 @@ do_install() {
 	    cat >&2 <<-'EOF'
 	    Error: this installer needs the ability to run commands as root.
 	    We are unable to find either "sudo" or "su" available to make this happen.
-	    EOF
+		EOF
 	    exit 1
 	fi
     fi
@@ -44,9 +44,9 @@ do_install() {
 	curl='busybox wget -qO-'
     fi
 
-    $curl $url/v$ver/$prg
+    $curl $url/$ver/$prg.sh > /tmp/$prg
+    chmod +x /tmp/$prg
     $sh_c "mv $prg /usr/local/bin/"
-    $sh_c "chmod +x /usr/local/bin/$prg"
 
 }
 
