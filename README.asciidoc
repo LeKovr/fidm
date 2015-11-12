@@ -19,7 +19,7 @@ There is a general usage example - link:https://github.com/LeKovr/consup[ConSup]
 
 === Install
 
-FIDM is a bash script. You just need to download it into $PATH directory anf set execute permission:
+FIDM is a bash script. You can download it into $PATH directory and set execute permission or just run the following command:
 
 -----
 wget -qO- https://raw.githubusercontent.com/LeKovr/fidm/master/install.sh | sh
@@ -27,7 +27,7 @@ wget -qO- https://raw.githubusercontent.com/LeKovr/fidm/master/install.sh | sh
 
 == Usage
 
-1. Create fidm config file (run `fidm init` or see eg/fidm_rus.yml for example)
+1. Create fidm config file (generate draft with `fidm init` or use eg/fidm_rus.yml for example)
 2. Edit it for your needs
 3. Run `fidm start'
 
