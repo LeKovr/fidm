@@ -293,6 +293,12 @@ config_parse() {
         val=$root_dir/$val
       fi
       args="$args --$key=$val"
+    elif [[ "$key" == "env" ]] ; then
+      #TODO: use val from ENV if any
+      local varname=${val%=*}
+      eval var=\$$varname
+      echo "check ENV: $val ($varname:$var)"
+      args="$args --$key=$val"
     elif [[ "$key" ]] ; then
       args="$args --$key=$val"
     else
@@ -505,4 +511,4 @@ DOCKER_INFO=$DOCKER
 app_run . "$@"
 # ------------------------------------------------------------------------------
 
-exit
+exit 0
