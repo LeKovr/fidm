@@ -44,10 +44,12 @@ do_install() {
 	curl='busybox wget -qO-'
     fi
 
-    $curl $url/$ver/$prg.sh > /tmp/$prg
-    chmod +x /tmp/$prg
-    $sh_c "mv /tmp/$prg /usr/local/bin/"
-
+    root=/usr/local/bin/
+    for f in $prg ${prg}_nb ; do
+      $curl $url/$ver/$f.sh > /tmp/$f
+    done
+    chmod +x /tmp/$prg*
+    $sh_c "mv /tmp/$prg* $root"
 }
 
 do_install
