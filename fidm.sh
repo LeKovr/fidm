@@ -39,6 +39,8 @@ app_help() {
     fidm.sh start pgws mode=dev
     fidm.sh stop modperl -a
 
+    # Use test as DB_NAME value in all fidm.yml
+    FIDM_DB_NAME=test fidm start
 EOF
   exit 1
 }
@@ -199,11 +201,8 @@ image_start() {
 
   local host=${cfg[name]}
   [[ "${cfg[host_use_mode]}" ]] && host="${host}_${cfg[mode]}"
-  local varname="ENV_${host//[-.]/_}" # get args from env, replace '-' in var name
-  eval var=\$$varname
-  [[ "$DEBUG" == "3" ]] && echo "VAR: $varname ($var)"
   $DOCKER run --hostname=$host --name=$tag --env=MODE=${cfg[mode]} --env=NODENAME=$host \
-    ${cfg[args]} $var ${cfg[creator]}/${cfg[image]}:${cfg[release]} ${cfg[cmd]}
+    ${cfg[args]} ${cfg[creator]}/${cfg[image]}:${cfg[release]} ${cfg[cmd]}
 }
 
 # ------------------------------------------------------------------------------
@@ -296,8 +295,12 @@ config_parse() {
     elif [[ "$key" == "env" ]] ; then
       #TODO: use val from ENV if any
       local varname=${val%=*}
-      eval var=\$$varname
-      echo "check ENV: $val ($varname:$var)"
+      local envname=FIDM_$varname
+      eval val2=\$$envname
+      if [[ "$val2" ]] ; then
+        echo "Replacing $val from ENV ($envname=$val2)"
+        val="$varname=$val2"
+      fi
       args="$args --$key=$val"
     elif [[ "$key" ]] ; then
       args="$args --$key=$val"
