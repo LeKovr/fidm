@@ -8,10 +8,10 @@ set -e
 # or
 #   curl -sSL https://raw.githubusercontent.com/LeKovr/fidm/master/install.sh | sh
 
+ver=v1.3
 
 prg=fidm
 url=https://raw.githubusercontent.com/LeKovr/$prg
-ver=v1.2
 
 command_exists() {
     command -v "$@" > /dev/null 2>&1
