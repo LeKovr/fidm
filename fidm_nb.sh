@@ -87,7 +87,7 @@ fidm_run() {
     [[ "$html" ]] || html=html
     echo "  Mount path: $path"
     echo "  html dir: $html"
-    fidm $CMD mode=www name=$site args_add="--volume=$path:/home/www" args_add="--env=HTML_DIR=$html"
+    fidm $CMD mode=www name=$site args_add="--volume=$path:/home/www" args_add="--env=HTML_DIR=$html" args_add="--env=HTML_ROOT=/home/www"
 
   elif [[ "$path" ]] ; then
     # redirect site
