@@ -252,7 +252,7 @@ config_parse() {
     # Process var & value
 
     # cut fidm params
-    for t in build dockerfile creator project release image mode name bind_ip local_ip hasdns log_dir host_use_mode cmd; do
+    for t in $CONFIG_VARS ; do
       if [[ "$key" == "$t" ]] ; then
         cfg[$key]=$val
         val=""
@@ -310,6 +310,16 @@ config_parse() {
   done < $config
 
   cfg[args]=$args
+
+  # Overwrite config from env
+  for t in $CONFIG_VARS ; do
+    tag=$(echo $t | tr '[a-z]' '[A-Z]')
+    eval z=\$FIDM_$tag
+    if [[ "$z" ]] ; then
+      cfg[$t]=$z
+    fi
+  done
+
 }
 
 # ------------------------------------------------------------------------------
@@ -505,6 +515,9 @@ EOF
 # ------------------------------------------------------------------------------
 # Program body
 # ------------------------------------------------------------------------------
+
+# 
+CONFIG_VARS="build dockerfile creator project release image mode name bind_ip local_ip hasdns log_dir host_use_mode cmd"
 
 DOCKER=$(which docker.io) || DOCKER=$(which docker)
 DOCKER_INFO=$DOCKER
