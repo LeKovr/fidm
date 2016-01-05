@@ -313,7 +313,7 @@ config_parse() {
 
   # Overwrite config from env
   for t in $CONFIG_VARS ; do
-    tag=$(echo $t | tr '[a-z]' '[A-Z]')
+    local tag=$(echo $t | tr '[a-z]' '[A-Z]')
     eval z=\$FIDM_$tag
     if [[ "$z" ]] ; then
       cfg[$t]=$z
