@@ -8,7 +8,7 @@ set -e
 # or
 #   curl -sSL https://raw.githubusercontent.com/LeKovr/fidm/master/install.sh | sh
 
-ver=v1.5
+ver=v1.5.1
 
 prg=fidm
 url=https://raw.githubusercontent.com/LeKovr/$prg
