@@ -206,6 +206,15 @@ image_start() {
 }
 
 # ------------------------------------------------------------------------------
+# exec command inside started container
+image_exec() {
+  local tag=$1
+  $DOCKER exec -ti $tag ${cfg[cmd]}
+}
+
+
+
+# ------------------------------------------------------------------------------
 image_stop() {
   local tag=$1  ; shift
   local work_dir=$1
@@ -322,6 +331,36 @@ config_parse() {
 
 }
 
+# ------------------------------------------------------------------------------
+# Start dependent and linked containers and main container
+image_tree_start() {
+      # Start dependencies
+      for (( i = 0 ; i < ${#requires[@]} ; i++ )) ; do
+        app_run $work_dir $cmd ${requires[$i]}
+      done
+
+      # Start links
+      for (( i = 0 ; i < ${#links[@]} ; i++ )) ; do
+        local LINK="" # child container name
+        local IP=""   # child has DNS at $IP
+        app_run $work_dir $cmd ${links[$i]}
+        cfg[args]="${cfg[args]} --link=$LINK"
+        [[ "$IP" ]] && cfg[args]="${cfg[args]} --dns=$IP"
+      done
+
+      # Start main 
+      if image_started $tag ; then
+        echo "Tag $tag is active"
+      elif image_registered $tag ; then
+        echo "Starting $tag..."
+        $DOCKER start $tag
+      else
+        echo "Creating $tag..."
+        image_start $tag
+      fi
+      # save my ip for parent if I have DNS
+      [[ "${cfg[hasdns]}" ]] && IP=$($DOCKER inspect --format '{{ .NetworkSettings.IPAddress }}' $tag)
+}
 # ------------------------------------------------------------------------------
 
 app_run() {
@@ -462,32 +501,15 @@ EOF
 
   case "$cmd" in
     start)
-      # Start dependencies
-      for (( i = 0 ; i < ${#requires[@]} ; i++ )) ; do
-        app_run $work_dir $cmd ${requires[$i]}
-      done
-
-      # Start links
-      for (( i = 0 ; i < ${#links[@]} ; i++ )) ; do
-        local LINK="" # child container name
-        local IP=""   # child has DNS at $IP
-        app_run $work_dir $cmd ${links[$i]}
-        cfg[args]="${cfg[args]} --link=$LINK"
-        [[ "$IP" ]] && cfg[args]="${cfg[args]} --dns=$IP"
-      done
-
-      # Start main 
+        image_tree_start $tag
+      ;;
+    exec)
       if image_started $tag ; then
         echo "Tag $tag is active"
-      elif image_registered $tag ; then
-        echo "Starting $tag..."
-        $DOCKER start $tag
+        image_exec $tag
       else
-        echo "Creating $tag..."
-        image_start $tag
+        image_tree_start $tag
       fi
-      # save my ip for parent if I have DNS
-      [[ "${cfg[hasdns]}" ]] && IP=$($DOCKER inspect --format '{{ .NetworkSettings.IPAddress }}' $tag)
       ;;
     stop)
       image_stop $tag $work_dir
