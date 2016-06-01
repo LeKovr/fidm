@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#    Copyright (c) 2014 Alexey Kovrizhkin <lekovr@gmail.com>
+#    Copyright (c) 2014-2016 Alexey Kovrizhkin <lekovr@gmail.com>
 #
 #    fidm.sh - Fig inspired Docker manager
 #    https://github.com/LeKovr/fidm
@@ -407,11 +407,13 @@ app_run() {
   fi
   local noext=${config_file%.yml}           # remove .yml if any
   local work_dir=$(dirname $noext)          # all paths are relative to config file
-  local project_def=$(basename $work_dir)   # PROJECT/NAME[/fidm].yml
+  local project_def=$CONSUP_PROJECT
+  [[ "$project_def" ]] || project_def=$(basename $work_dir)   # PROJECT/NAME[/fidm].yml
+
   local name_def=$(basename $noext)         # PROJECT/NAME[/fidm].yml
   if [[ "$name_def" == "fidm" ]] ; then
-    name_def=$project_def
-    project_def=$(basename $(dirname $work_dir))
+    name_def=$(basename $work_dir)
+    [[ "$project_def" == "$name_def" ]] && project_def=$(basename $(dirname $work_dir))
   fi
 
   local -A cfg                      # associative array
@@ -442,6 +444,8 @@ app_run() {
     fi
   done
 
+  # Load ENV
+  [[ "$CONSUP_RELEASE" ]] && cfg[release]=$CONSUP_RELEASE
 
   # Set defaults
   [[ "${cfg[creator]}" ]] || x=$($DOCKER_INFO info 2>/dev/null | grep Username) cfg[creator]=${x#*: }  
