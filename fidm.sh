@@ -396,7 +396,7 @@ app_run() {
       [[ "$file" ]] || { [[ "$f" != "fidm.yml" ]] && continue ; } # do not check $prefix/ and $prefix/.yml
       local n="$prefix$file"
       #[[ "$n" == "." ]] || n="$n."
-      #    echo "Check $n$f"
+      [[ "$DEBUG" == "3" ]] && echo "Lookup: $n$f"
       [ -f "$n$f" ] && { config_file="$n$f" ; break ; }
       [[ "$file" == "${file%.yml}" ]] || break # only one check if name has ext
     done
