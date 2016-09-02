@@ -553,7 +553,7 @@ CONFIG_VARS="build dockerfile creator project release image mode name bind_ip lo
 
 DOCKER=$(which docker.io) || DOCKER=$(which docker)
 DOCKER_INFO=$DOCKER
-[[ "$DEBUG" == "9" ]] && DOCKER="echo $DOCKER"
+[[ "$NORUN" ]] && DOCKER="echo $DOCKER"
 #DEBUG="" # 1 - show args, 2 - show parse details
 
 app_run . "$@"
