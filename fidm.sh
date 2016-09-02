@@ -385,7 +385,13 @@ app_run() {
   local config_file
   local current_dir=$run_at
   [[ "$run_at" == "." ]] && current_dir=$PWD
-  for prefix in "$current_dir/" $CONSUP_ROOT "../" "../../" "../../../" ; do # look at current, parent and grandparent dir
+  if [ -z ${CONSUP_ROOT+x} ]; then
+    croot=""
+  else
+    croot=$CONSUP_ROOT
+    echo "Consup root: $croot"
+  fi
+  for prefix in "$current_dir/" $croot "../" "../../" "../../../" ; do # look at current, parent and grandparent dir
     for f in "" ".yml" "fidm.yml" ; do      # add nothing, ext or default name
       [[ "$file" ]] || { [[ "$f" != "fidm.yml" ]] && continue ; } # do not check $prefix/ and $prefix/.yml
       local n="$prefix$file"
