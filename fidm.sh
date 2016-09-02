@@ -454,11 +454,12 @@ app_run() {
   [[ "$CONSUP_RELEASE" ]] && cfg[release]=$CONSUP_RELEASE
 
   # Set defaults
-  [[ "${cfg[creator]}" ]] || x=$($DOCKER_INFO info 2>/dev/null | grep Username) cfg[creator]=${x#*: }  
+  [[ "${cfg[creator]}" ]] || x=$($DOCKER_INFO info 2>/dev/null | grep Username) cfg[creator]=${x#*: }
+  [[ "${cfg[creator]}" ]] || cfg[creator]=lekovr
   [[ "${cfg[project]}" ]] || cfg[project]=$project_def
   [[ "${cfg[name]}"    ]] || cfg[name]=$name_def
   [[ "${cfg[build]}"   ]] || cfg[build]="Dockerfiles/${cfg[name]}"
-  [[ "${cfg[dockerfile]}"   ]] || cfg[dockerfile]="Dockerfile"
+  [[ "${cfg[dockerfile]}" ]] || cfg[dockerfile]="Dockerfile"
   [[ "${cfg[release]}" ]] || cfg[release]="latest"
   [[ "${cfg[image]}"   ]] || cfg[image]=${cfg[project]}_${cfg[name]}
   [[ "${cfg[mode]}"    ]] || cfg[mode]=$(cd $work_dir && git rev-parse --abbrev-ref HEAD 2> /dev/null)
