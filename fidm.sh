@@ -2,7 +2,7 @@
 #
 #    Copyright (c) 2014-2016 Alexey Kovrizhkin <lekovr@gmail.com>
 #
-#    fidm.sh - Fig inspired Docker manager
+#    fidm.sh v1.9 - Fig inspired Docker manager
 #    https://github.com/LeKovr/fidm
 #
 # ------------------------------------------------------------------------------
@@ -25,6 +25,7 @@ app_help() {
       stop    - stop docker container with suffix MODE and dependencies
       rm      - remove docker container 
       init    - create new config with defaults
+      version - show program version and exit
 
     CONFIG    - config file with fidm vars and docker run args
 
@@ -556,7 +557,7 @@ DOCKER=$(which docker.io) || DOCKER=$(which docker)
 DOCKER_INFO=$DOCKER
 [[ "$NORUN" ]] && DOCKER="echo $DOCKER"
 #DEBUG="" # 1 - show args, 2 - show parse details, 3 - show .yml lookup log
-
+[[ "$1" == "version" ]] && { echo "fidm.sh v1.9" ; exit 0 ; }
 app_run . "$@"
 # ------------------------------------------------------------------------------
 
