@@ -1,3 +1,5 @@
+**WARNING: this project is deprecated. Now I am use link:https://github.com/dopos/dcape[dcape] for this purposes.**
+
 == FIDM
 
 Docker container manager (Fig Inspired Docker Manager).
